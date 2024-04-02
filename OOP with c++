@@ -1,0 +1,147 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+
+class Om {
+private:
+    std::string locatieDorita;
+    double buget;
+
+public:
+    Om(std::string locatieDorita, double buget)
+        : locatieDorita(locatieDorita), buget(buget) {}
+        
+
+    std::string GetLocatieDorita() const {
+        return locatieDorita;
+    }
+
+    double GetBuget() const {
+        return buget;
+    }
+};
+
+class Cladire {
+protected:
+    std::string locatie;
+    double pret;
+
+public:
+    Cladire(std::string locatie, double pret)
+        : locatie(locatie), pret(pret) {}
+
+    virtual void AfisareDetalii() {
+        std::cout << "Locatie: " << locatie << '\n';
+        std::cout << "Pret: " << pret << '\n';
+    }
+
+    bool VerificaSimilaritate(const Om& om) const {
+        return (locatie == om.GetLocatieDorita() && std::abs(pret - om.GetBuget()) < 10000); // Presupunem o asemănare a prețului dacă diferența este mai mică de 10000
+    }
+
+    virtual ~Cladire() {}
+};
+
+class CasacuEtaj : public Cladire {
+private:
+    int numarCamere;
+    bool areGaraj;
+    double MarimeCurte;
+
+public:
+    CasacuEtaj(std::string locatie, double pret, int numarCamere, bool areGaraj, double MarimeCurte)
+        : Cladire(locatie, pret), numarCamere(numarCamere), areGaraj(areGaraj), MarimeCurte(MarimeCurte) {}
+
+    void AfisareDetalii() override {
+        Cladire::AfisareDetalii();
+        std::cout << "Numar camere: " << numarCamere << '\n';
+        std::cout << "Are garaj: " << (areGaraj ? "Da" : "Nu") << '\n';
+        std::cout << "Marime curte: " << MarimeCurte << '\n';
+    }
+};
+
+class Hotel : public Cladire {
+private:
+    int nrStele;
+    int nrcamere;
+
+public:
+    Hotel(std::string locatie, double pret, int nrStele, int nrcamere)
+        : Cladire(locatie, pret), nrStele(nrStele), nrcamere(nrcamere) {}
+
+    void AfisareDetalii() override {
+        Cladire::AfisareDetalii();
+        std::cout << "Numar stele: " << nrStele << '\n';
+        std::cout << "Numar camere: " << nrcamere << '\n';
+    }
+};
+
+class Apartament : public Cladire {
+private:
+    int numarCamere;
+    double suprafata;
+    bool areBalcon;
+
+public:
+    Apartament(std::string locatie, double pret, int numarCamere, double suprafata, bool areBalcon)
+        : Cladire(locatie, pret), numarCamere(numarCamere), suprafata(suprafata), areBalcon(areBalcon) {}
+
+    void AfisareDetalii() override {
+        Cladire::AfisareDetalii();
+        std::cout << "Numar camere: " << numarCamere << '\n';
+        std::cout << "Suprafata: " << suprafata << " metri patrati\n";
+        std::cout << "Are balcon: " << (areBalcon ? "Da" : "Nu") << '\n';
+    }
+};
+class Penthouse : public Cladire{
+private:
+    int numarCamere;
+    double suprafata;
+    bool areMansarda;
+
+public:
+    Penthouse(std::string locatie, double pret, int numarCamere, double suprafata, bool areMansarda)
+        :Cladire(locatie, pret), numarCamere(numarCamere), suprafata(suprafata), areMansarda(areMansarda){}
+    void AfisareDetalii() override{
+        Cladire::AfisareDetalii();
+        std::cout << "Numar camere: " << numarCamere << '\n';
+        std::cout << "Suprafata: " << suprafata << " metri patrati\n";
+        std::cout << "Are mansarda: " << (areMansarda ? "Da" : "Nu") << '\n';
+    } 
+
+};
+
+int main() {
+    CasacuEtaj casa("Voluntari", 150000, 4, true, 250); // Creăm o casă cu etaj
+    Hotel hotel("Constanta", 500000, 5, 50); // Creăm un hotel
+    Apartament apartament("Craiova", 100000, 2, 75, true); // Creăm un apartament
+    Penthouse penthouse("Bucuresti", 80000 , 4 , 100, true);
+
+    Om client("Craiova", 110000); // Creăm un client cu o locație dorită și un buget
+
+    // Afisare detalii clădiri
+    std::cout << "Detalii Casa:\n";
+    casa.AfisareDetalii();
+    std::cout << '\n';
+
+    std::cout << "Detalii Hotel:\n";
+    hotel.AfisareDetalii();
+    std::cout << '\n';
+
+    std::cout << "Detalii Apartament:\n";
+    apartament.AfisareDetalii();
+    std::cout << '\n';
+
+    std::cout << "Detalii Penthouse:\n";
+    penthouse.AfisareDetalii();
+    std::cout << '\n';
+
+    // Verificare similaritate între locația și prețul clădirilor și preferințele clientului
+    std::cout << "Verificare similaritate pentru client:\n";
+    std::cout << "Casa: " << (casa.VerificaSimilaritate(client) ? "Potrivit" : "Nu potrivit") << '\n';
+    std::cout << "Hotel: " << (hotel.VerificaSimilaritate(client) ? "Potrivit" : "Nu potrivit") << '\n';
+    std::cout << "Apartament: " << (apartament.VerificaSimilaritate(client) ? "Potrivit" : "Nu potrivit") << '\n';
+    std::cout << "Penthouse: " << (penthouse.VerificaSimilaritate(client) ? "Potrivit" : "Nu potrivit") << '\n';
+
+    return 0;
+}
