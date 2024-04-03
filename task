@@ -1,0 +1,13 @@
+Întrebări și teste la interviu?
+1. Test de logică + Problemă de algoritmică:
+- la testul de logica poți căuta orice fel de întrebări de logică pe net pentru a te pregăti de interviu
+- algoritm: se dă un șir de caractere și se cere inversarea literelor fiecărui cuvânt. Nu ai voie siruri ajutătoare. Nu ai voie funcții din librăria string. Trebuie făcut totul cu procesare pe stringul dat.
+
+2. Interviu tehnic
+- o problemă de OOP: trebuie să scrii clase despre clădiri, să faci minim 5 clase, îți dau ei două exemple (casă cu etaj & hotel), să faci cât de multe principii de OOP pe care le știi
+- o problemă de debug: trebuie să te prinzi că o copiere cu strncpy nu se face corect pentru că bufferul in care copiezi are garbage data, trebuie să citești documentația unei funcții și să te prinzi că un parametru trebuie dat prin referință, după sunt niște printf-uri apelate cu pointer de char*, nu cu char*
+- o problemă de implementare cu 4 task-uri:
+primul task trebuie să găsești atributele fișierelor de pe disk si să le afișezi. Aici e destul de simplu pentru ca structura cu care afișezi numele fișierelor conține și informațiile despre atribute și trebuie doar să faci & pe bits cu niște constante
+al 2-a task trebuie să faci parcurgere recursivă a unui tree de folders. Aici trebuie să ai grijă să construiești corect path către următorul folder și să sari peste folderele . și .. pentru că produc ciclu infinit
+task 3 e foarte simplu trebuie să faci o sortare și folosești ceva existent
+task 4 aici nu știu exact cât de bine am făcut dar după ce m-am mai documentat acasă cred că am găsit răspunsul corect. Trebuie făcută o funcționalitate wildcard, un filtru *.cpp (sau altă structură), care să îți întoarcă doar acele fișiere din parcurgerea recursivă. Funcția cu care parcurgi inițial deja are suport pentru așa ceva, pentru că o apelezi cu * (adică tot) în primă fază.
