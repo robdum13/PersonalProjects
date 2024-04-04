@@ -23,13 +23,7 @@ std::vector<Item> readContentDescriptor(const std::string& filePath) {
     }
 
     std::string line;
-    bool firstLine = true; // Flag to skip the first line
     while (std::getline(file, line)) {
-        if (firstLine) {
-            firstLine = false;
-            continue;
-        }
-
         Item item;
         std::istringstream iss(line);
         char separator;
