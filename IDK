@@ -13,28 +13,42 @@ struct Item {
     std::string Content;
 };
 
+bool writeFile(const std::string& filePath, const std::string& content) {
+    std::ofstream file(filePath);
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to open file " << filePath << std::endl;
+        return false;
+    }
+
+    file << content;
+    file.close();
+    return true;
+}
+
 std::vector<Item> readContentDescriptor(const std::string& filePath) {
     std::vector<Item> items;
     std::ifstream file(filePath);
 
     if (!file.is_open()) {
-        std::cerr << "Error: Unable to open file " << filePath << std::endl;
-        return items;
+        std::cerr << " Error! " << filePath << std::endl;
+        return items''
     }
 
     std::string line;
     int lineCount = 0;
     while (std::getline(file, line)) {
         lineCount++;
-        if (lineCount <= 2) continue; // Skip first two lines
-        Item item;
-        std::istringstream iss(line);
-        char separator;
-        if (iss >> item.ParentFolderID >> separator >> item.ItemID >> separator >> item.ItemType >> separator >> item.ItemName >> separator >> item.Content) {
-            items.push_back(item);
-        } else {
-            std::cerr << "Error parsing line: " << line << std::endl;
+        if (line.empty() || line.find("Possible  item types:") != std::string::npos) {
+            continue;
         }
+
+        Item item;
+        if (sscanf(line.c_str(), "%d|%d|%c|%[^|]|%[^\n]", &item.ParentFolderID, &item.ItemID, &item.ItemType, &item.ItemName[0], &item.Content[0]) != 5) {
+            std::cerr << "Error at line " << line << std::endl;
+            continue;
+        }
+
+        items.push_back(item);
     }
 
     file.close();
@@ -48,14 +62,16 @@ void displayContents(const std::vector<Item>& items, int parentId = 0, int depth
             std::cout << indentation;
 
             if (item.ItemType == 'D') {
-                std::cout << "(Directory) " << item.ItemName << std::endl;
-                displayContents(items, item.ItemID, depth + 1); // Recursive call for directories
-            } else if (item.ItemType == 'F') {
-                std::cout << "(File) " << item.ItemName;
+                std::cout << "(D) " << item.ItemName << std::endl;
+                displayContents(items, item.ItemID, depth + 1); // Recursiv!
+            }
+            else if (item.ItemType == 'F') {
+                std::cout << "(F) " << item.ItemName;
                 if (!item.Content.empty()) {
                     std::cout << " -> " << item.Content; // Display file content if available
                 }
                 std::cout << std::endl;
+                writeFile(item.ItemName, item.Content);
             }
         }
     }
