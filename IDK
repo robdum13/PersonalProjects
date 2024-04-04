@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <sstream>
 
 struct Item {
     int ParentFolderID;
@@ -22,19 +23,21 @@ std::vector<Item> readContentDescriptor(const std::string& filePath) {
     }
 
     std::string line;
+    bool firstLine = true; // Flag to skip the first line
     while (std::getline(file, line)) {
-        // Skip header and empty lines
-        if (line.empty() || line.find("Possible item types:") != std::string::npos) {
+        if (firstLine) {
+            firstLine = false;
             continue;
         }
 
         Item item;
-        if (sscanf(line.c_str(), "%d|%d|%c|%[^|]|%[^\n]", &item.ParentFolderID, &item.ItemID, &item.ItemType, &item.ItemName[0], &item.Content[0]) != 5) {
+        std::istringstream iss(line);
+        char separator;
+        if (iss >> item.ParentFolderID >> separator >> item.ItemID >> separator >> item.ItemType >> separator >> item.ItemName >> separator >> item.Content) {
+            items.push_back(item);
+        } else {
             std::cerr << "Error parsing line: " << line << std::endl;
-            continue;
         }
-
-        items.push_back(item);
     }
 
     file.close();
@@ -48,12 +51,12 @@ void displayContents(const std::vector<Item>& items, int parentId = 0, int depth
             std::cout << indentation;
 
             if (item.ItemType == 'D') {
-                std::cout << "(D) " << item.ItemName << std::endl;
-                displayContents(items, item.ItemID, depth + 1);
+                std::cout << "(Directory) " << item.ItemName << std::endl;
+                displayContents(items, item.ItemID, depth + 1); // Recursive call for directories
             } else if (item.ItemType == 'F') {
-                std::cout << "(F) " << item.ItemName;
+                std::cout << "(File) " << item.ItemName;
                 if (!item.Content.empty()) {
-                    std::cout << " -> " << item.Content;
+                    std::cout << " -> " << item.Content; // Display file content if available
                 }
                 std::cout << std::endl;
             }
