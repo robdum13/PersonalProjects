@@ -52,3 +52,65 @@ int _tmain(int argc, char* argv[])
    _getch();
    return 0;
 }
+
+
+
+Description
+The application is designed for restoring content (structure folders, file contents etc.), starting from a predefined structure. The structure is described in the Structure.txt file (which can also be used as a sample for testing the application, as you advance on the requirements detailed below).
+The ContentDescriptor.txt structure is as follows:
+·	Each line represents a folder or file that needs to be created on the HDD - the information related to an item is separated by |
+·	A line is described as follows: ParentFolderID|ItemID|ItemType|ItemName|Content_of_file_if_ItemType_is_F
+·	ParentFolderID represents an ItemID of type Directory. The items that you are about to create for a specific line, have to be children of this ParentFolder. The ParentFolderID always represent ItemIDs for Directory items
+1.	If ParentFolderID is 0, this means that it has no other parent, it will be created in the root folder
+·	ItemID - a unique ID in the ContentDescriptor.txt file that can be used internally (in the program), to identify a Directory or File
+·	ItemType - it can be either D (Directory) or F (File)
+·	ItemName - either a folder name (if ItemType is D) or a file name (if ItemType is F)
+·	Content_of_file_if_ItemType_is_F - if the ItemType is F, the content will be written in the file that you've just created
+·	Examples:
+·	0|1|D|Folder_1
+·	Parameters:
+2.	ParentFolderID = 0
+3.	ItemID = 1
+4.	ItemType = Directory
+5.	ItemName = Folder_1
+·	For this line, you would create a directory called "Folder_1" in the root directory
+·	1|2|D|SubFolder1_1
+·	Parameters:
+6.	ParentFolderID = 1
+7.	ItemID = 2
+8.	ItemType = Directory
+9.	ItemName = SubFolder_1_1
+·	For this line, you would create a directory called "SubFolder_1_1" in the "Folder_1" directory that you've created above
+·	1|3|F|File1.txt|Content1
+·	Parameters:
+10.	ParentFolderID = 1
+11.	ItemID = 3
+12.	ItemType = File
+13.	ItemName = File_1
+14.	Content_of_file_if_ItemType_is_F = Content1
+·	For this line, you would create a file called File_1" in the "Folder_1" directory that you've created above, and you would write "Content1" in the file
+
+Requirements
+
+The application will be written in C/C++ native, and you are allowed to use MSDN or Google.
+
+1. Create a function that receives a file path (the file path for ContentDescriptor.txt) and that reads the entire file in memory (in a struct/class/etc. - you decide the best storage solution). Also write a function that receives the storage structure and displays its contents recursively, as follows:
+(D) Folder_1
+(F) Folder_1 -> File_1.txt
+(F) Folder_1 -> File_2.xt
+(D) Folder_1 -> SubFolder_1
+(F) Folder_1 -> SubFolder_1 -> File_1_1.txt
+(F) Folder_1 -> SubFolder_1 -> File_1_2.txt
+(D) Folder_1 -> SubFolder_1 -> SubFolder_1_2
+(F) Folder_1 -> SubFolder_1 -> SubFolder_1_2 -> File_1_2_1.txt
+(F) Folder_1 -> SubFolder_2 -> File_2_1.txt
+(F) Folder_1 -> SubFolder_2 -> File_2_2.txt
+etc.
+
+2. Create a function for writing the contents of a file on disk (it should receive the path to the file, and the string content that needs to be written in the file)
+
+3. Create a function that receives as parameter the storage structure, and that creates the required directories, writes the required files and their contents on disk
+
+Tips
+
+You could search MSDN for methods such as: CreateFile, CreateDirectory, WriteFile etc. or you could use your own preferred functions from C++.
