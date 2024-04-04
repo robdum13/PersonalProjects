@@ -23,7 +23,10 @@ std::vector<Item> readContentDescriptor(const std::string& filePath) {
     }
 
     std::string line;
+    int lineCount = 0;
     while (std::getline(file, line)) {
+        lineCount++;
+        if (lineCount <= 2) continue; // Skip first two lines
         Item item;
         std::istringstream iss(line);
         char separator;
