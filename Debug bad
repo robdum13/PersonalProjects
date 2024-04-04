@@ -1,0 +1,57 @@
+// OOP_App.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+
+int _tmain(int argc, char* argv[])
+{
+   char filePath[MAX_PATH] = {0};
+
+   // Get the current working directory: 
+   if( (_getcwd( filePath, MAX_PATH )) == NULL )
+   {
+      perror( "_getcwd error" );
+      return (-1);
+   }
+
+   char sampleFileName[MAX_PATH] = "\\SampleFile.txt";
+   strncat (filePath, sampleFileName, strlen(sampleFileName) - 1);
+
+   printf( "Reading file %s \n\n", filePath);
+
+   HANDLE hFile = CreateFile(&filePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+   if (hFile == INVALID_HANDLE_VALUE) 
+   { 
+      printf("Unable to open file \"%s\" for read.\n", filePath);
+      return (-1);
+   }
+
+   DWORD dwNumToRead = GetFileSize(&hFile, NULL);
+   DWORD dwNumRead;
+  
+   char *dwBuffer = NULL;
+   dwBuffer = new char[dwNumToRead];
+   printf("Reading file\n\n");
+
+   if( FALSE == ReadFile(hFile, dwBuffer, dwNumToRead - 1, &dwNumRead, NULL) )
+   {
+      printf("Unable to read from file.\n");
+      CloseHandle(hFile);
+      return (-1);
+   }
+
+   if (dwNumRead > 0 && dwNumRead <= dwNumToRead-1)
+   {
+      dwBuffer[dwNumRead] = '\0'; // NULL character
+
+      printf("Data from file: \n\n%s\n", dwBuffer);
+   }
+
+   BOOL bResult = CloseHandle(hFile);
+
+   delete dwBuffer;
+   printf("\nPress any key to continue...");
+   _getch();
+   return 0;
+}
